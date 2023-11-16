@@ -1,11 +1,7 @@
 package crack.transformer;
 
 import crack.AddConstFunction;
-import javassist.bytecode.ClassFile;
-import javassist.bytecode.CodeAttribute;
-import javassist.bytecode.ConstPool;
-import javassist.bytecode.ExceptionTable;
-import javassist.bytecode.MethodInfo;
+import javassist.bytecode.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -29,6 +25,7 @@ public class SingleMethodTransformer extends CrackTransformer {
             this.function.accept(constPool);
         }
         MethodInfo methodInfo = classFile.getMethod(methodName);
+        methodInfo.setAccessFlags(methodInfo.getAccessFlags() & ~AccessFlag.NATIVE);
         CodeAttribute codeAttribute = new CodeAttribute(constPool, stack, locals, newCode, new ExceptionTable(constPool));
         methodInfo.setCodeAttribute(codeAttribute);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
